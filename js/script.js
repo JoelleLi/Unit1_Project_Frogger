@@ -6,12 +6,35 @@ function init() {
     document.addEventListener("keyup", handleRestartOption)
 
 // *---------- Audio ----------*
+    let isMuted = false
+    // let gameTune = new Audio ("https://commondatastorage.googleapis.com/codeskulptor-demos/DDR_assets/Kangaroo_MusiQue_-_The_Neverwritten_Role_Playing_Game.mp3")
     let collisionSound = new Audio ("https://rpg.hamsterrepublic.com/wiki-images/d/db/Crush8-Bit.ogg")
     let fellInRiverSound = new Audio ("https://commondatastorage.googleapis.com/codeskulptor-demos/pyman_assets/eatedible.ogg")
     let reachedHomeSound = new Audio ("https://codeskulptor-demos.commondatastorage.googleapis.com/GalaxyInvaders/pause.wav")
 
 
+    const originalVolume = 1.0
+    collisionSound.volume = originalVolume
+    fellInRiverSound.volume = originalVolume
+    reachedHomeSound.volume = originalVolume
+
+    const muteButton = document.getElementById("muteButton")
+    muteButton.addEventListener("click", toggleMute)
+
+
+    function toggleMute() {
+        isMuted = !isMuted
+
+        collisionSound.volume = isMuted ? 0 : originalVolume
+        fellInRiverSound.volume = isMuted ? 0 : originalVolume
+        reachedHomeSound.volume = isMuted ? 0 : originalVolume
+
+        muteButton.innerText = isMuted ? "unmute" : "mute"
+        this.blur()
+    }
+
 // *---------- Game Variables ----------*
+    let timeOut = false
     let winner = false
     let gameOver = false
     let lives = 3
@@ -19,7 +42,6 @@ function init() {
     let livesArray = startingLivesArray
     const message = document.querySelector("#gridMessage")
     message.style.display = "none"
-
 
 // *---------- Frog Variables ----------*
     const startingPosition = 229
@@ -86,7 +108,6 @@ function init() {
     let newPositionRiverRowFour
     let newPositionRiverRowFive
 
-
     const width = 17
     const height = 15
     let cellCount = width * height
@@ -113,10 +134,48 @@ function init() {
             }
                 grid.appendChild(cell)
                 cellsIndex.push(cell)
+                // gameTune.play()
+        }
+    }
+
+    const timerWidth = 60
+    const timerHeight = 1
+    let timerCellCount = timerWidth * timerHeight
+    let timerIndex = []
+    const startingSecondsArray = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 
+                        11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 
+                        21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 
+                        31, 32, 33, 34, 35, 36, 37, 38, 39, 40,
+                        41, 42, 43, 44, 45, 46, 47, 48, 49, 50,
+                        51, 52, 53, 54, 55, 56, 57, 58, 59]
+    let secondsArray = startingSecondsArray
+
+    const timer = document.querySelector(".timer")
+
+    function createTimer() {
+        for (let i = 0; i < timerCellCount; i++) {
+            const timerCell = document.createElement("div")
+            timerCell.id = i
+
+            if (i === 0) {
+                timerCell.classList.add("lastSecond")
+            }
+            timer.appendChild(timerCell)
+            timerIndex.push(timerCell)
+        }
+    }
+
+    function addTimer() {
+        secondsArray = startingSecondsArray
+        for (let i = 0; i < secondsArray.length; i++) {
+            timerIndex[secondsArray[i]].classList.add("second")
+            console.log("timer added")
         }
     }
 
     createGrid()
+    createTimer()
+    addTimer()
     addHomes()
     addFrogFamily()
     addLives()
@@ -133,6 +192,10 @@ function init() {
 
     // *---------- Intervals ----------*
 
+    intervalDuration = 1000
+
+    let timerLoop = setInterval(timerCountDown, intervalDuration)
+
     setInterval(checkForCarCollision, 10)
  
     setInterval(moveCarOne, rowOneInterval)
@@ -141,7 +204,6 @@ function init() {
     setInterval(moveCyclists, rowFourInterval)
     setInterval(moveLorrys, lorryInterval)
 
-
     setInterval(lilyPadMovementRowOne, 900)
     setInterval(logMovementRowTwo, 600)
     setInterval(logMovementRowThree, 600)
@@ -149,13 +211,52 @@ function init() {
     setInterval(lilyPadMovementRowFive, 600)
     setInterval(checkIfFrogReachesHome, 600)
 
+    function timerCountDown() {
+        const lastSecond = document.querySelector(".lastSecond")
+
+        if(!gameOver) {
+            if (lastSecond.classList.contains("second")) {
+                timerIndex[secondsArray.pop()].classList.remove("second")
+                timeOut = false
+            } else if (!lastSecond.classList.contains("second") && timeOut === false) {
+                console.log("time run out")
+                clearInterval(timerLoop)
+                lives--
+                console.log(lives)
+                cellsIndex[livesArray.pop()].classList.remove("heart")
+                collisionSound.play()
+                renderMessage()
+                resetFrogPosition()
+                timeOut = true
+                resetTimer()
+            }
+        }
+    }
+
+    function resetTimer() {
+        clearInterval(timerLoop)
+        secondsArray = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 
+            11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 
+            21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 
+            31, 32, 33, 34, 35, 36, 37, 38, 39, 40,
+            41, 42, 43, 44, 45, 46, 47, 48, 49, 50,
+            51, 52, 53, 54, 55, 56, 57, 58, 59]
+        console.log(secondsArray)
+        console.log(startingSecondsArray)
+        for (let i = 0; i < secondsArray.length; i++) {
+            timerIndex[secondsArray[i]].classList.add("second")
+            console.log("timer reset")    
+        }
+        timeOut = false
+        timerLoop = setInterval(timerCountDown, intervalDuration)
+    }
+
     function addFrog(position) {
         cellsIndex[position].classList.add("frog")
     }
 
     function removeFrog() {
         cellsIndex[currentPosition].classList.remove("frog")
-        console.log("frog removed")
     }
 
     function addFrogFamily() {
@@ -183,19 +284,15 @@ function init() {
 
         if (key === up && currentPosition >= width) {
             removeFrog()
-            console.log("up")
             currentPosition -= width
-        } else if (key === down && currentPosition + width <= cellCount - 1) {
+        } else if (key === down && currentPosition + width <= cellCount - 18) {
             removeFrog()
-            console.log("down")
             currentPosition += width
         } else if (key === left && currentPosition % width !== 0) {
             removeFrog()
-            console.log("left")
             currentPosition--
         } else if (key === right && currentPosition % width !== width -1) {
             removeFrog()
-            console.log("right")
             currentPosition++
         } else {
             console.log("INVALID KEY")
@@ -289,12 +386,15 @@ function init() {
 
             if (currentPosition === currentCarPositionRowOne[i]) {
                 console.log("COLLISION ROW ONE")
+                clearInterval(timerLoop)
                 lives--
                 console.log(lives)
                 cellsIndex[livesArray.pop()].classList.remove("heart")
                 collisionSound.play()
                 renderMessage()
                 resetFrogPosition()
+                timeOut = true
+                resetTimer()
             }
         }
 
@@ -461,24 +561,63 @@ function init() {
     }
 
     function checkIfFrogOnLilyRowOne() {
-        let frog = cellsIndex[currentPosition]
+        let frog = cellsIndex[currentPosition];
+        
         for (let i = 0; i < currentLilyPadPositionRowOne.length; i++) {
-                if (frog === cellsIndex[currentLilyPadPositionRowOne[i]]) {
-                    console.log("FROG ON LILYPAD")
-                    removeFrog()
-                    currentPosition++
-                    addFrog(currentPosition)
+            let lilyPadRowOne = cellsIndex[currentLilyPadPositionRowOne[i]];
+    
+            if (frog === lilyPadRowOne) {
+                console.log("FROG ON LILYPAD");
+                removeFrog();
+                currentPosition++;
+    
+                // Check if the lily pad goes out of bounds
+                if (lilyPadRowOne.classList.contains("lilypad")) {
+                    let newIndex = currentLilyPadPositionRowOne[i] + 1
+                    if (newIndex > 118) {
+                        console.log("FROG OUT OF BOUNDS")
+                        clearInterval(timerLoop)
+                        fellInRiverSound.play()
+                        lives--
+                        cellsIndex[livesArray.pop()].classList.remove("heart")
+                        renderMessage()
+                        resetFrogPosition()
+                        timeOut = true
+                        resetTimer()
+                    }
+                }
+    
+                addFrog(currentPosition)
             }
         }
     }
 
     function checkIfFrogOnLilyRowFour() {
         let frog = cellsIndex[currentPosition]
+
         for (let i = 0; i < currentLilyPadPositionRowFour.length; i++) {
-                if (frog === cellsIndex[currentLilyPadPositionRowFour[i]]) {
+            let lilyPadRowFour = cellsIndex[currentLilyPadPositionRowFour[i]];
+
+                if (frog === lilyPadRowFour) {
                     console.log("FROG ON LILYPAD")
                     removeFrog()
                     currentPosition--
+
+                    if (lilyPadRowFour.classList.contains("lilypad")) {
+                        let newIndex = currentLilyPadPositionRowFour[i] - 1
+                        if (newIndex < 51) {
+                            console.log("FROG OUT OF BOUNDS")
+                            clearInterval(timerLoop)
+                            fellInRiverSound.play()
+                            lives--
+                            cellsIndex[livesArray.pop()].classList.remove("heart")
+                            renderMessage()
+                            resetFrogPosition()
+                            timeOut = true
+                            resetTimer()
+                        }
+                    }
+
                     addFrog(currentPosition)
             }
         }
@@ -487,10 +626,28 @@ function init() {
     function checkIfFrogOnLilyRowFive() {
         let frog = cellsIndex[currentPosition]
         for (let i = 0; i < currentLilyPadPositionRowFive.length; i++) {
+            let lilyPadRowFive = cellsIndex[currentLilyPadPositionRowFive[i]];
+
                 if (frog === cellsIndex[currentLilyPadPositionRowFive[i]]) {
                     console.log("FROG ON LILYPAD")
                     removeFrog()
                     currentPosition++
+
+                    if (lilyPadRowFive.classList.contains("lilypad")) {
+                        let newIndex = currentLilyPadPositionRowFive[i] + 1
+                        if (newIndex > 50) {
+                            console.log("FROG OUT OF BOUNDS")
+                            clearInterval(timerLoop)
+                            fellInRiverSound.play()
+                            lives--
+                            cellsIndex[livesArray.pop()].classList.remove("heart")
+                            renderMessage()
+                            resetFrogPosition()
+                            timeOut = true
+                            resetTimer()
+                        }
+                    }
+
                     addFrog(currentPosition)
             }
         }
@@ -532,11 +689,14 @@ function init() {
           for (let i = 0; i < riverArray.length; i++) {
             if (!frogOnLilyPad && !frogOnLog && currentPosition === parseInt(riverArray[i].id)) {
                     console.log("FELL IN RIVER")
+                    clearInterval(timerLoop)
                     fellInRiverSound.play()
                     lives--
                     cellsIndex[livesArray.pop()].classList.remove("heart")
                     renderMessage()
                     resetFrogPosition()
+                    timeOut = true
+                    resetTimer()
             }
         }
     }
@@ -547,10 +707,14 @@ function init() {
         for (let i = 0; i < bank.length; i++) {
             if (currentPosition === bank[i]) {
                 console.log("HIT RIVERBANK")
+                clearInterval(timerLoop)
+                collisionSound.play()
                 lives--
                 cellsIndex[livesArray.pop()].classList.remove("heart")
                 renderMessage()
                 resetFrogPosition()
+                timeOut = true
+                resetTimer()
             } 
         }
     }
@@ -568,16 +732,18 @@ function init() {
                 console.log("home reached")
 
                 checkWinner()
+            } else if (currentPosition === homes[i] && frog.classList.contains("frogInHome")) {
+                clearInterval(timerLoop)
+                collisionSound.play()
+                currentPosition = startingPosition
+                addFrog(startingPosition)
+                console.log("frog already in home")
+                lives--
+                cellsIndex[livesArray.pop()].classList.remove("heart")
+                renderMessage()
+                timeOut = true
+                resetTimer()
             }
-            // } else if (frog.classList.contains("frogInHome")) {
-            //     console.log("frog already in home")
-            //     lives--
-            //     cellsIndex[livesArray.pop()].classList.remove("heart")
-            //     renderMessage()
-            //     currentPosition = startingPosition
-            //     addFrog(startingPosition)
-
-            // }
          }
     }
 
@@ -602,6 +768,7 @@ function init() {
     function renderMessage() {
 
         if (winner === true) {
+            gameOver = true
             message.style.display = "flex"
             message.innerHTML = "winner!<br>press -enter-<br>to play again"
             // clearInterval(checkIfFrogReachesHome)
@@ -609,7 +776,7 @@ function init() {
             document.addEventListener("keyup", handleRestartOption)
 
         } else if (lives === 0) {
-            gameOver === true
+            gameOver = true
             message.style.display = "flex"
             message.innerHTML = "you lose =(<br>press -enter-<br>to play again"
             // message.addEventListener("click", handleRestartOption)
@@ -642,6 +809,9 @@ function init() {
         addFrogFamily()
         addLives()
         resetFrogPosition()
+        resetTimer()
+
+        // changeTimerLoop()
         console.log("game reset")
     }
 
