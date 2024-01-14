@@ -725,11 +725,14 @@ function init() {
         for (let i = 0; i < homes.length; i++) {
             if (currentPosition === homes[i] && !frog.classList.contains("frogInHome")) {
                 frogInHomeCount++
+                clearInterval(timerLoop)
                 // cellsIndex[homes[i]].classList.remove("home")
                 // cellsIndex[homes[i]].classList.add("bank")
                 cellsIndex[homes[i]].classList.add("frogInHome")
                 reachedHomeSound.play()
                 console.log("home reached")
+                timeOut = true
+                resetTimer()
 
                 checkWinner()
             } else if (currentPosition === homes[i] && frog.classList.contains("frogInHome")) {
