@@ -10,13 +10,6 @@ body {
     text-align: center;
 }
 
-.controls {
-    font-size: 15px;
-    font-weight: bolder;
-    height: 40px;
-    width: 50px;
-}
-
 .heading {
     align-items: center; 
     display: flex;
@@ -223,6 +216,13 @@ button {
     font-family: pixelify sans;
 }
 
+.controls {
+    font-size: 15px;
+    font-weight: bolder;
+    height: 50px;
+    width: 60px;
+}
+
 #bottomButtonRow {
     margin: 10px 0 10px 0;
 }
@@ -267,7 +267,7 @@ button {
     }
 
     .title {
-        width: 30px;
+        width: 40px;
     }
 
 }
