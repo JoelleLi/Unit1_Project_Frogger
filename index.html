@@ -10,13 +10,13 @@
 </head>
 <body>
     <div class="heading">
-        <img src="./images/frogger01.png">
-        <img src="./images/frogger02.png">
-        <img src="./images/frogger03.png">
-        <img src="./images/frogger04.png">
-        <img src="./images/frogger05.png">
-        <img src="./images/frogger06.png">
-        <img src="./images/frogger07.png">
+        <img src="./images/frogger01.png" class="title">
+        <img src="./images/frogger02.png" class="title">
+        <img src="./images/frogger03.png" class="title">
+        <img src="./images/frogger04.png" class="title">
+        <img src="./images/frogger05.png" class="title">
+        <img src="./images/frogger06.png" class="title">
+        <img src="./images/frogger07.png" class="title">
     </div>
     <main class="grid-wrapper">
         <div class="grid-background">
@@ -24,9 +24,20 @@
             <div id="gridMessage"></div>
         </div>
     </main>
+
     <div class="timer-wrapper">
         <div class="timer"></div>
     </div>
+    
+    <div id="buttonContainer">
+        <button class="controls" id="upButton">↑</button>
+        <div id="bottomButtonRow">
+            <button class="controls" id="leftButton">←</button>
+            <button class="controls" id="downButton">↓</button>
+            <button class="controls" id="rightButton">→</button>
+        </div>
+    </div>
+
     <button id="muteButton">mute</button>
 </body>
 </html>

@@ -10,6 +10,13 @@ body {
     text-align: center;
 }
 
+.controls {
+    font-size: 15px;
+    font-weight: bolder;
+    height: 40px;
+    width: 50px;
+}
+
 .heading {
     align-items: center; 
     display: flex;
@@ -200,25 +207,66 @@ body {
     gap: 0;
     width: 500px;
     height: 10px;
-    margin-bottom: 20px;
+    margin-bottom: 15px;
     
 }
-/* 
-.timer div {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    position: relative;
-} */
 
 .timer div.second {
     background-color: red;
 }
 
-#muteButton {
+button {
     background-color: rgba(175, 233, 176, 1);
     border: 1px solid green;
     border-radius: 10px;
     color: darkolivegreen;
     font-family: pixelify sans;
+}
+
+#bottomButtonRow {
+    margin: 10px 0 10px 0;
+}
+
+#downButton {
+    margin-left: 10px;
+    margin-right: 10px;
+}
+
+
+@media only screen and (max-width: 769px) {
+    .heading {
+        margin-bottom: 3px;
+    }
+    .grid {
+        border-radius: 30px;
+        border: none;
+        width: 280px;
+        height: 250px;
+    }
+
+    .grid-wrapper {
+        border-radius: 0;
+        height: 280px;
+        width: 250px;
+    }
+
+    .grid-background {
+        height: 250px;
+        width: 250px;
+    }
+
+    .timer {
+        height: 5px;
+        width: 250px;
+    }
+    #gridMessage {
+        font-size: 25px;
+        height: 200px;
+        width: 200px;
+    }
+
+    .title {
+        width: 30px;
+    }
+
 }
