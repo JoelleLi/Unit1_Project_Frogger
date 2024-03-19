@@ -2,9 +2,6 @@
 
 function init() {
 
-    document.addEventListener("keyup", frogDirection)
-    document.addEventListener("keyup", handleRestartOption)
-
 // *---------- Audio ----------*
     let isMuted = false
     // let gameTune = new Audio ("https://commondatastorage.googleapis.com/codeskulptor-demos/DDR_assets/Kangaroo_MusiQue_-_The_Neverwritten_Role_Playing_Game.mp3")
@@ -272,15 +269,53 @@ function init() {
         }
     }
 
-    function frogDirection(event) {
-        const key = event.keyCode
+    document.addEventListener("keyup", frogDirection)
+    document.addEventListener("keyup", handleRestartOption)
 
+    const upButton = document.querySelector("#upButton")
+    const downButton = document.querySelector("#downButton")
+    const leftButton = document.querySelector("#leftButton")
+    const rightButton = document.querySelector("#rightButton")
+
+    upButton.addEventListener("click", () => frogDirection("up"))
+    downButton.addEventListener("click", () => frogDirection("down"))
+    leftButton.addEventListener("click", () => frogDirection("left"))
+    rightButton.addEventListener("click", () => frogDirection("right"))
+
+    upButton.addEventListener("touchstart", () => frogDirection("up"))
+    downButton.addEventListener("touchstart", () => frogDirection("down"))
+    leftButton.addEventListener("touchstart", () => frogDirection("left"))
+    rightButton.addEventListener("touchstart", () => frogDirection("right"))
+
+    function frogDirection(event) {
+        let key;
+
+        if (typeof event === "string") {
+
+            switch (event) {
+                case "up":
+                    key = 38
+                    break
+                case "down":
+                    key = 40
+                    break
+                case "left":
+                    key = 37
+                    break
+                case "right":
+                    key = 39
+                    break
+                default:
+                    console.log("INVALID BUTTON")
+                    return
+            }
+        } else {
+            key = event.keyCode
+        }
         const up = 38
         const down = 40
         const left = 37
         const right = 39
-
-        // removeFrog()
 
         if (key === up && currentPosition >= width) {
             removeFrog()
@@ -298,8 +333,36 @@ function init() {
             console.log("INVALID KEY")
         }
         addFrog(currentPosition)
-        // checkIfFrogOnLily()
+
     }
+    // function frogDirection(event) {
+    //     const key = event.keyCode
+
+    //     const up = 38
+    //     const down = 40
+    //     const left = 37
+    //     const right = 39
+
+    //     // removeFrog()
+
+    //     if (key === up && currentPosition >= width) {
+    //         removeFrog()
+    //         currentPosition -= width
+    //     } else if (key === down && currentPosition + width <= cellCount - 18) {
+    //         removeFrog()
+    //         currentPosition += width
+    //     } else if (key === left && currentPosition % width !== 0) {
+    //         removeFrog()
+    //         currentPosition--
+    //     } else if (key === right && currentPosition % width !== width -1) {
+    //         removeFrog()
+    //         currentPosition++
+    //     } else {
+    //         console.log("INVALID KEY")
+    //     }
+    //     addFrog(currentPosition)
+    //     // checkIfFrogOnLily()
+    // }
 
     function moveCarOne() {
   
@@ -773,17 +836,20 @@ function init() {
         if (winner === true) {
             gameOver = true
             message.style.display = "flex"
-            message.innerHTML = "winner!<br>press -enter-<br>to play again"
-            // clearInterval(checkIfFrogReachesHome)
-            // clearInterval(lilyPadMovementRowFive)
+            message.innerHTML = "winner!<br>press -enter-<br>or click here<br>to play again"
+
             document.addEventListener("keyup", handleRestartOption)
+            message.addEventListener("click", handleRestartOption)
+            message.addEventListener("touchstart", handleRestartOption)
 
         } else if (lives === 0) {
             gameOver = true
             message.style.display = "flex"
-            message.innerHTML = "you lose =(<br>press -enter-<br>to play again"
-            // message.addEventListener("click", handleRestartOption)
+            message.innerHTML = "you lose =(<br>press -enter-<br>or click here<br>to play again"
+
             document.addEventListener("keyup", handleRestartOption)
+            message.addEventListener("click", handleRestartOption)
+            message.addEventListener("touchstart", handleRestartOption)
         }
     }
 
@@ -791,9 +857,12 @@ function init() {
         const key = event.keyCode
         const restartKey = 13
 
-        if (key === restartKey) {
+        if (event.type === "click" || event.type === "touchstart" || key === restartKey) {
             resetGame()
             document.removeEventListener("keyup", handleRestartOption, ("enter"))
+            const message = document.getElementById("gridMessage")
+            message.removeEventListener("click", handleRestartOption)
+            message.removeEventListener("touchstart", handleRestartOption)
         }
     }
 
