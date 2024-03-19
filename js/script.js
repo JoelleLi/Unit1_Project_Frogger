@@ -288,6 +288,36 @@ function init() {
     // leftButton.addEventListener("touchstart", () => frogDirection("left"))
     // rightButton.addEventListener("touchstart", () => frogDirection("right"))
 
+    function handleKeyup(event) {
+        frogDirection(event.keyCode)
+    }
+    
+    function handleTouchEnd(event) {
+        // Prevent the default behavior for touch events
+        event.preventDefault()
+    
+        // Determine which button was touched
+        const touchedButtonId = event.target.id
+    
+        // Map the touched button to the corresponding direction
+        switch (touchedButtonId) {
+            case "upButton":
+                frogDirection("up")
+                break
+            case "downButton":
+                frogDirection("down")
+                break
+            case "leftButton":
+                frogDirection("left")
+                break
+            case "rightButton":
+                frogDirection("right")
+                break
+            default:
+                console.log("INVALID BUTTON")
+        }
+    }
+    
     function frogDirection(event) {
         let key;
 
