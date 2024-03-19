@@ -17,7 +17,7 @@ function init() {
 
     const muteButton = document.getElementById("muteButton")
     muteButton.addEventListener("click", toggleMute)
-    muteButton.addEventListener("touchstart", toggleMute)
+    // muteButton.addEventListener("touchstart", toggleMute)
 
 
     function toggleMute() {
@@ -283,10 +283,10 @@ function init() {
     leftButton.addEventListener("click", () => frogDirection("left"))
     rightButton.addEventListener("click", () => frogDirection("right"))
 
-    upButton.addEventListener("touchstart", () => frogDirection("up"))
-    downButton.addEventListener("touchstart", () => frogDirection("down"))
-    leftButton.addEventListener("touchstart", () => frogDirection("left"))
-    rightButton.addEventListener("touchstart", () => frogDirection("right"))
+    // upButton.addEventListener("touchstart", () => frogDirection("up"))
+    // downButton.addEventListener("touchstart", () => frogDirection("down"))
+    // leftButton.addEventListener("touchstart", () => frogDirection("left"))
+    // rightButton.addEventListener("touchstart", () => frogDirection("right"))
 
     function frogDirection(event) {
         let key;
