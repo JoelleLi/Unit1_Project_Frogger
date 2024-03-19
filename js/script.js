@@ -17,6 +17,7 @@ function init() {
 
     const muteButton = document.getElementById("muteButton")
     muteButton.addEventListener("click", toggleMute)
+    muteButton.addEventListener("touchstart", toggleMute)
 
 
     function toggleMute() {
@@ -221,7 +222,7 @@ function init() {
                 lives--
                 console.log(lives)
                 cellsIndex[livesArray.pop()].classList.remove("heart")
-                collisionSound.play()
+                fellInRiverSound.play()
                 renderMessage()
                 resetFrogPosition()
                 timeOut = true
